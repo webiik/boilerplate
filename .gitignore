@@ -1,7 +1,7 @@
 .idea
 composer.lock
-config.local.php
 vendor
+config.local.php
 *.log
 private/app/tmp/cache/*
 !private/app/tmp/cache/.gitkeep

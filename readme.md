@@ -10,7 +10,7 @@ Use this Boilerplate(skeleton) to quickly set up easily customisable website wit
 
 ###### Installation:
 ```bash
-php composer.phar create-project webiik/boilerplate [your-app-dir]
+composer create-project webiik/boilerplate [your-app-dir]
 ```
 
 [Documentation [to be done]]()
