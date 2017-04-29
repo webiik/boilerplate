@@ -166,4 +166,12 @@ return [
      * Below comes configuration for additional classes you will use with Webiik.
      * --------------------------------------------------------------------------
      */
+
+    // WebiikFW class settings
+    'Facebook' => [
+
+        // Folder structure
+        'clientId' => '1789792224627518',
+        'clientSecret' => '04f626a495ae205185c7271c3d6a7d9a',
+    ],
 ];
