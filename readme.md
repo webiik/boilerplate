@@ -11,6 +11,7 @@ Use this Boilerplate(skeleton) to quickly set up easily customisable website wit
 ###### Installation:
 1. `composer create-project webiik/boilerplate [your-app-dir]`
 2. Inside `[your-app-dir]/private` run `composer install`
+3. Create MySQL database called `webiik` and create tables within this database with queries located in file `[your-app-dir]/private/vendor/webiik/webiik/src/WebiikFW/migration/db.sql`
 
 [Documentation [to be done]]()
 [Live example [to be done]]()
