@@ -9,7 +9,5 @@
       "name": "Jiri Mihal",
       "email": "jiri@mihal.me"
     }
-  ],
-  "minimum-stability": "dev-master",
-  "prefer-stable" : true
+  ]
 }
