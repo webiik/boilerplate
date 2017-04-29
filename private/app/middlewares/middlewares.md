@@ -1,0 +1,1 @@
+Files inside this folder will be auto-loaded with Composer's psr-4 with namespace Webiik.

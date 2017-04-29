@@ -3,4 +3,6 @@ config.local.php
 vendor
 *.log
 private/app/tmp/cache/*
+!private/app/tmp/cache/.gitkeep
 private/app/tmp/sessions/*
+!private/app/tmp/sessions/.gitkeep
