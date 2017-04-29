@@ -27,8 +27,8 @@ return [
         // We add LogHandlerEmail to Log, so we need to configure it
         'LogHandlerEmail' => [
             'dir' => __DIR__ . '/../logs',
-            'recipient' => 'jiri@mihal.me',
-            'sender' => 'no-reply@webiik.com',
+            'recipient' => 'SET-YOUR-OWN-ADDRESS',
+            'sender' => 'SET-YOUR-OWN-ADDRESS',
             'subject' => 'Webiik system notice',
         ],
     ],
@@ -145,8 +145,8 @@ return [
 
     // PHPMailer class settings
     'PHPMailer' => [
-        'fromName' => 'Webiik',
-        'fromEmail' => 'no-reply@webiik.com',
+        'fromName' => 'SET-YOUR-OWN-NAME',
+        'fromEmail' => 'SET-YOUR-OWN-ADDRESS',
 
         // Setting for SMTP socket
         'SMTP' => [
@@ -171,7 +171,7 @@ return [
     'Facebook' => [
 
         // Folder structure
-        'clientId' => '',
-        'clientSecret' => '',
+        'clientId' => 'SET-YOUR-OWN-ID',
+        'clientSecret' => 'SET-YOUR-OWN-SECRET',
     ],
 ];
