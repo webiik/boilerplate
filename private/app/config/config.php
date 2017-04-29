@@ -52,7 +52,7 @@ return [
     'WebiikFW' => [
 
         // Folder structure
-        'publicDir' => __DIR__ . '/../../../../boilerplate',
+        'publicDir' => __DIR__ . '/../../../',
         'privateDir' => __DIR__ . '/../../../private',
     ],
 
