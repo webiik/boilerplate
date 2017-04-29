@@ -9,9 +9,8 @@ Use this Boilerplate(skeleton) to quickly set up easily customisable website wit
 - optional advanced logging of missing routes, missing translations and runtime errors
 
 ###### Installation:
-```bash
-composer create-project webiik/boilerplate [your-app-dir]
-```
+1. `composer create-project webiik/boilerplate [your-app-dir]`
+2. Inside `[your-app-dir]/private` run `composer install`
 
 [Documentation [to be done]]()
 [Live example [to be done]]()
