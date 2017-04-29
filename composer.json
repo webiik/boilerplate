@@ -9,5 +9,7 @@
       "name": "Jiri Mihal",
       "email": "jiri@mihal.me"
     }
-  ]
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable" : true
 }
