@@ -167,7 +167,7 @@ return [
      * --------------------------------------------------------------------------
      */
 
-    // WebiikFW class settings
+    // Facebook login settings
     'Facebook' => [
 
         // Folder structure

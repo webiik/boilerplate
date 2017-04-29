@@ -5,6 +5,7 @@ class AuthSocialFacebookApi extends AuthBase
 {
     private $flash;
     private $token;
+    private $WConfig;
 
     public function __construct(
         Flash $flash,
@@ -12,10 +13,12 @@ class AuthSocialFacebookApi extends AuthBase
         Auth $auth,
         Csrf $csrf,
         WRouter $router,
-        WTranslation $translation
+        WTranslation $translation,
+        $WConfig
     )
     {
         parent::__construct($auth, $csrf, $router, $translation);
+        $this->WConfig = $WConfig;
         $this->flash = $flash;
         $this->token = $token;
     }
@@ -57,8 +60,8 @@ class AuthSocialFacebookApi extends AuthBase
         $oauth->setValidateTokenUrl('https://graph.facebook.com/debug_token');
 
         // Set API credentials
-        $oauth->setClientId('1789792224627518');
-        $oauth->setClientSecret('04f626a495ae205185c7271c3d6a7d9a');
+        $oauth->setClientId($this->WConfig['Facebook']['clientId']);
+        $oauth->setClientSecret($this->WConfig['Facebook']['clientSecret']);
 
         // Make API calls
 
