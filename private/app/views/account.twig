@@ -1,0 +1,11 @@
+{% extends "base.twig" %}
+{% block content %}
+    {% for key, messages in messages() %}
+        {% for message in messages %}
+            {{ message|raw }}
+        {% endfor %}
+    {% endfor %}
+    <h1>{{ seo.title }}</h1>
+    <p>{{ seo.desc }}</p>
+    <p>{{ t1 }}</p>
+{% endblock %}

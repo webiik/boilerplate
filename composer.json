@@ -1,0 +1,13 @@
+{
+  "name": "webiik/boilerplate",
+  "description": "Boilerplate(skeleton) of easily customisable website created using the Webiik framework. It comes with handy features like user accounts, social login, multilingual support...",
+  "keywords": ["skeleton", "boilerplate", "website", "webiik"],
+  "homepage": "http://webiik.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jiri Mihal",
+      "email": "jiri@mihal.me"
+    }
+  ]
+}
