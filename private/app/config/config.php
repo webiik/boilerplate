@@ -171,7 +171,7 @@ return [
     'Facebook' => [
 
         // Folder structure
-        'clientId' => '1789792224627518',
-        'clientSecret' => '04f626a495ae205185c7271c3d6a7d9a',
+        'clientId' => '',
+        'clientSecret' => '',
     ],
 ];
