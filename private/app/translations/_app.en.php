@@ -57,6 +57,8 @@ return [
             'user-banned' => 'You have a ban to access this site.',
             'too-many-attempts' => 'Too many attempts. Try it later.',
             'user-already-exists' => 'Same account already exists.',
+            'user-already-exists-suffix-set' => 'Account exists in \'{suffix}\' version. Only one account is allowed across all versions.',
+            'user-already-exists-suffix-get' => 'Account exists in \'{suffix}\' version. Please log in with this version.',
             'user-does-not-exist-1' => 'Account does not exist.',
             'user-does-not-exist-2' => 'Sign up first.',
             'user-activate-1' => 'First login requires activation. An activation email has been sent to your email box. Open this email and confirm the activation.',

@@ -90,12 +90,12 @@ $app->container()->addService('WTemplateEngine', function ($c) {
 
     // Add auth functions
 
-    /* @var $auth \Webiik\Auth */
-    $auth = $c['Webiik\Auth'];
+    /* @var $auth \Webiik\AuthExtended */
+    $auth = $c['Webiik\AuthExtended'];
 
     // Return user id on success otherwise false
     $function = new \Twig_SimpleFunction('isUserLogged', function () use ($auth) {
-        return $auth->isUserLogged();
+        return $auth->isLogged();
     });
     $twig->addFunction($function);
 

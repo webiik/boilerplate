@@ -11,7 +11,7 @@ class AuthActivationSendApi extends AuthBase
         Connection $connection,
         WRender $render,
         \PHPMailer $PHPMailer,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

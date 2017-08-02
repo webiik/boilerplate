@@ -7,7 +7,7 @@ class AuthSocialPairingConfirm extends AuthBase
 
     public function __construct(
         Flash $flash,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

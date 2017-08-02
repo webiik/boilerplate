@@ -4,7 +4,7 @@ namespace Webiik;
 class AuthLoginApi extends AuthBase
 {
     public function __construct(
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

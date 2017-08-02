@@ -2,10 +2,11 @@
 namespace Webiik;
 
 /**
- * Implementation of Webiik/Auth class. It provides all functionality
- * of Webiik/Auth prepared for easy use on website. In human words, it
- * does all dirty work: it gets/validates/prepares data needed by Webiik/Auth
- * and it displays user-friendly messages. Read comments for more info.
+ * Implementation of Webiik/AuthExtended class. It provides all functionality
+ * of Webiik/AuthExtended prepared for easy use on website. In other words, it
+ * process forms and does all dirty work: gets/validates/prepares data needed
+ * by Webiik/AuthExtended and finally displays translated user-friendly messages.
+ * Read comments for more info.
  *
  * Class AuthBase
  * @package Webiik
@@ -13,7 +14,7 @@ namespace Webiik;
 class AuthBase
 {
     /**
-     * @var Auth
+     * @var AuthExtended
      */
     protected $auth;
 
@@ -45,7 +46,7 @@ class AuthBase
     private $permanent = false;
 
     public function __construct(
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation
@@ -234,7 +235,7 @@ class AuthBase
         // Process userGet() errors
         $resArr = array_merge_recursive($this->handleUserGetRes($userGet), $resArr);
 
-        if ($userGet['err'] == 6) {
+        if ($userGet['err'] == 5) {
 
             // User does not exist, sign up the user
             $resArr = $this->socialSignup($email, $provider);
@@ -697,7 +698,7 @@ class AuthBase
         $resArr = [];
 
         // Log out the user
-        $this->auth->userLogout();
+        $this->auth->logout();
 
         $resArr['msg']['ok'][] = $this->translation->_t('auth.msg.logout');
         $resArr['redirectUrl'] = $this->router->getUrlFor('login');
@@ -779,6 +780,7 @@ class AuthBase
      *
      * @return array
      * 'err' - (bool|int) False on success, otherwise numeric err of auth->userSet().
+     * 'uid' - (bool|int) False on error, otherwise user id.
      * 'msg' - (array) Array of messages related to the auth->userSet() result.
      * 'form['msg']' - (array) Array of messages related to individual form fields. May be not set.
      * 'redirectUrl' - (string|bool) Look at getRedirectUrl() for more info. May be not set.
@@ -786,7 +788,9 @@ class AuthBase
      */
     private function handleUserSetRes($userSet)
     {
-        $resArr = [];
+        $resArr = [
+            'uid' => false,
+        ];
 
         // Handle errors...
 
@@ -800,31 +804,39 @@ class AuthBase
             $resArr['msg']['err'][] = $this->translation->_t('auth.msg.too-many-attempts');
         }
 
-        // Err: User already exists
+        // Err: User is banned
         if ($userSet['err'] == 3) {
+            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.user-banned');
+        }
+
+        // Err: Unexpected error, can't generate activation token
+        if ($userSet['err'] == 4) {
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 's', 'errNum' => $userSet['err']]);
+        }
+
+        // Err: User already exists
+        if ($userSet['err'] == 5 || $userSet['err'] == 7) {
             $resArr['msg']['err'][] = $this->translation->_t('auth.msg.user-already-exists');
             $resArr['form']['msg']['err']['email'][] = '';
             $resArr['form']['msg']['err']['pswd'][] = '';
         }
 
-        // Err: Unexpected error, unable to store user in database
-        if ($userSet['err'] == 4) {
-            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 's', 'errNum' => $userSet['err']]);
-        }
-
-        // Err: Unexpected error, can't generate activation token
-        if ($userSet['err'] == 5) {
-            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 's', 'errNum' => $userSet['err']]);
+        // Err: User already exists under different suffix
+        if ($userSet['err'] == 6 || $userSet['err'] == 8) {
+            $suffix = '<a href="' . $this->router->getUrlFor('login', $userSet['suffix']) . '">' . $userSet['suffix'] . '</a>';
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.user-already-exists-suffix-set', ['suffix' => $suffix]);
+            $resArr['form']['msg']['err']['email'][] = '';
+            $resArr['form']['msg']['err']['pswd'][] = '';
         }
 
         // Err: Unexpected error, unable to store user in social database
-        if ($userSet['err'] == 6) {
+        if ($userSet['err'] == 9) {
             $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 's', 'errNum' => $userSet['err']]);
         }
 
-        // Err: User is banned
-        if ($userSet['err'] == 7) {
-            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.user-banned');
+        // Err: Unexpected error, unable to store user in database
+        if ($userSet['err'] == 10) {
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 's', 'errNum' => $userSet['err']]);
         }
 
         // Ok: User has been signed up
@@ -857,9 +869,11 @@ class AuthBase
             } else {
 
                 // Sign up doesn't require activation...
-                $this->auth->userLogin($userSet['uid'], $this->permanent);
+                $this->auth->login($userSet['uid'], $this->permanent);
                 $resArr['msg']['ok'][] = $this->translation->_t('auth.msg.welcome-first');
             }
+
+            $resArr['uid'] = $userSet['uid'];
         }
 
         $resArr['err'] = $userSet['err'];
@@ -875,13 +889,16 @@ class AuthBase
      *
      * @return array
      * 'err' - (bool|int) False on success, otherwise numeric err of auth->userGet().
+     * 'uid' - (bool|int) False on error, otherwise user id.
      * 'msg' - (array) Array of messages related to the auth->userGet() result.
      * 'form['msg']' - (array) Array of messages related to individual form fields. May be not set.
      * 'redirectUrl' - (string|bool) Look at getRedirectUrl() for more info. May be not set.
      */
     private function handleUserGetRes($userGet)
     {
-        $resArr = [];
+        $resArr = [
+            'uid' => false,
+        ];
 
         // Handle errors...
 
@@ -895,29 +912,18 @@ class AuthBase
             $resArr['msg']['err'][] = $this->translation->_t('auth.msg.too-many-attempts');
         }
 
-        // Err: Can't generate token
+        // Err: User is banned
         if ($userGet['err'] == 3) {
-            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 'l', 'errNum' => $userGet['err']]);
+            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.user-banned');
         }
 
-        // Err: Account is not activated
+        // Err: Can't generate token
         if ($userGet['err'] == 4) {
-            $rKey = $userGet['tokens']['re-activation']['selector'] . '.' . $userGet['tokens']['re-activation']['token'];
-            $rUrl = $this->router->getUrlFor('activation-send') . '?key=' . $rKey;
-            $rMsg = $this->translation->_t('auth.msg.user-activate-1') . ' ';
-            $rMsg .= '<a href="' . $rUrl . '">';
-            $rMsg .= $this->translation->_t('auth.msg.user-activate-2');
-            $rMsg .= '</a>';
-            $resArr['msg']['err'][] = $rMsg;
-        }
-
-        // Err: Unexpected error, more users exist
-        if ($userGet['err'] == 5) {
             $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 'l', 'errNum' => $userGet['err']]);
         }
 
         // Err: User does not exist
-        if ($userGet['err'] == 6) {
+        if ($userGet['err'] == 5) {
 
             $rUrl = $this->router->getUrlFor('signup');
             $rMsg = $this->translation->_t('auth.msg.user-does-not-exist-1') . ' ';
@@ -929,9 +935,23 @@ class AuthBase
             $resArr['form']['msg']['err']['pswd'][] = '';
         }
 
-        // Err: User is banned
+        // Err: User exist with different suffix
+        if ($userGet['err'] == 6) {
+            $suffix = '<a href="' . $this->router->getUrlFor('login', $userGet['suffix']) . '">' . $userGet['suffix'] . '</a>';
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.user-already-exists-suffix-set', ['suffix' => $suffix]);
+            $resArr['form']['msg']['err']['email'][] = '';
+            $resArr['form']['msg']['err']['pswd'][] = '';
+        }
+
+        // Err: Account is not activated
         if ($userGet['err'] == 7) {
-            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.user-banned');
+            $rKey = $userGet['tokens']['re-activation']['selector'] . '.' . $userGet['tokens']['re-activation']['token'];
+            $rUrl = $this->router->getUrlFor('activation-send') . '?key=' . $rKey;
+            $rMsg = $this->translation->_t('auth.msg.user-activate-1') . ' ';
+            $rMsg .= '<a href="' . $rUrl . '">';
+            $rMsg .= $this->translation->_t('auth.msg.user-activate-2');
+            $rMsg .= '</a>';
+            $resArr['msg']['err'][] = $rMsg;
         }
 
         // Err: Password is not set
@@ -955,14 +975,8 @@ class AuthBase
             $resArr['form']['msg']['err']['pswd'][] = $this->translation->_p('auth.msg.pswd-not-set-1', ['providers' => $providers]);
         }
 
-        // Err: Incorrect password
-        if ($userGet['err'] == 9) {
-            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.pswd-incorrect');
-            $resArr['form']['msg']['err']['pswd'][] = '';
-        }
-
         // Err: Social is not paired with main account
-        if ($userGet['err'] == 10) {
+        if ($userGet['err'] == 9) {
             $rKey = $userGet['tokens']['re-pairing']['selector'];
             $rKey .= '.';
             $rKey .= $userGet['tokens']['re-pairing']['token'];
@@ -975,9 +989,21 @@ class AuthBase
             $resArr['msg']['err'][] = $rMsg;
         }
 
+        // Err: Unexpected error, more users exist
+        if ($userGet['err'] == 10) {
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.unexpected-err', ['operation' => 'l', 'errNum' => $userGet['err']]);
+        }
+
+        // Err: Incorrect password
+        if ($userGet['err'] == 11 || $userGet['err'] == 12) {
+            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.pswd-incorrect');
+            $resArr['form']['msg']['err']['pswd'][] = '';
+        }
+
         // Ok: User is valid
         if (!$userGet['err']) {
-            $this->auth->userLogin($userGet['uid'], $this->permanent);
+            $this->auth->login($userGet['uid'], $this->permanent);
+            $resArr['uid'] = $userGet['uid'];
             $resArr['msg']['ok'][] = $this->translation->_t('auth.msg.welcome-again');
             $resArr['redirectUrl'] = $this->getRedirectUrl($this->onPageLogin);
         }
@@ -1081,7 +1107,7 @@ class AuthBase
 
         // Ok
         if (!$userPswdUpdateStepTwo['err']) {
-            $this->auth->userLogout();
+            $this->auth->logout();
             $resArr['msg']['ok'][] = $this->translation->_t('auth.msg.pswd-changed');
             $resArr['redirectUrl'] = $this->router->getUrlFor('login');
         }

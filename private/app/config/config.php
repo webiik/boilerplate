@@ -89,21 +89,54 @@ return [
     // Auth class settings
     'Auth' => [
 
-        // Indicates if authentication to account will be common for all language adaptations
-        // of website or if each language adaptation will require separate login.
-        'distinguishLanguages' => false,
+        // Account resolution mode read more at setUserAccountResolution
+        // 0 - user can make only one account and access it in every language
+        // 1 - user can make only one account and access it only with language where he created it
+        // 2 - user can make multiple accounts and access them only with language where he created them
+        'accountResolutionMode' => 2, // it affects also AuthExtended
+
+        // Auto logout time in sec
+        // If user doesn't interact with his account for autoLogoutTime, he will be automatically logged out.
+        // 0 = disabled auto logout
+        'autoLogoutTime' => 600,
+
+        // How much sec lasts the permanent login cookie
+        // 0 = disabled permanent login
+        'permanentCookieExpirationTime' => 0,
+
+        // Name of permanent login cookie
+        'permanentCookieName' => 'PC',
 
         // Name of loggin session
         'loginSessionName' => 'logged',
 
-        // Name of permanent login cookie
-        'permanentLoginCookieName' => 'PC',
+        // Set permanent login files directory
+        'permanentLoginFilesDir' => __DIR__ . '/../tmp/permanent',
 
-        // How much hours lasts the permanent login cookie
-        'permanentLoginHours' => 1,
+        // Automatically delete expired permanent records with 5% chance
+        // during isLogged method call, 0 = don't delete them
+        'autoDeleteExpiredPermanentRecords' => 5,
 
-        // Indicates if account needs activation
+    ],
+
+    // AuthExtended class
+    'AuthExtended' => [
+
+        // Indicates if user accounts need activation
         'withActivation' => true,
+
+        // Number of attempt to login, sign-up, token actions
+        // Allow 60 attempts per 1 hour from same ip
+        'attemptsLimit' => [60, 3600],
+
+        // Allow validate token within 24 hours
+        'confirmationTime' => 86400,
+
+        // Password salt
+        'salt' => 'r489cjd3Xhed',
+
+        // Automatically delete expired tokens and attempts during their creation with 1% chance to delete
+        'autoDelete' => true,
     ],
 
     // Cookie class settings
@@ -133,7 +166,7 @@ return [
         'dir' => __DIR__ . '/../tmp/sessions',
 
         // How long sessions will be valid in seconds. int, 0 = till session is valid
-        'lifetime' => 1440,
+        'lifetime' => 0,
     ],
 
     // Csrf class settings

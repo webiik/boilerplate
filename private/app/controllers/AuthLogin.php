@@ -10,7 +10,7 @@ class AuthLogin extends AuthBase
     public function __construct(
         Flash $flash,
         WRender $render,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

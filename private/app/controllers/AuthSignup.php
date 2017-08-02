@@ -11,7 +11,7 @@ class AuthSignup extends AuthBase
         Flash $flash,
         WRender $render,
         \PHPMailer $PHPMailer,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

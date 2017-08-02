@@ -9,7 +9,7 @@ class AuthSignupApi extends AuthBase
     public function __construct(
         WRender $render,
         \PHPMailer $PHPMailer,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation

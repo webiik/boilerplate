@@ -10,7 +10,7 @@ class AuthSocialFacebook extends AuthBase
     public function __construct(
         Flash $flash,
         Token $token,
-        Auth $auth,
+        AuthExtended $auth,
         Csrf $csrf,
         WRouter $router,
         WTranslation $translation,
