@@ -93,7 +93,7 @@ return [
         // 0 - user can make only one account and access it in every language
         // 1 - user can make only one account and access it only with language where he created it
         // 2 - user can make multiple accounts and access them only with language where he created them
-        'accountResolutionMode' => 2, // it affects also AuthExtended
+        'accountResolutionMode' => 0, // it affects also AuthExtended
 
         // Auto logout time in sec
         // If user doesn't interact with his account for autoLogoutTime, he will be automatically logged out.
