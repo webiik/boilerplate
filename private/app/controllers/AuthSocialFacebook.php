@@ -86,8 +86,14 @@ class AuthSocialFacebook extends AuthBase
             $this->auth->redirect($loginUrl);
         }
 
-        // Try to get token info
-        $info = $oauth->getTokenInfo($data['access_token'], $data['access_token'], 'GET');
+        // Try to get App access token
+        $app = $oauth->getAccessTokenByCredentials($this->WConfig['Facebook']['clientId'], $this->WConfig['Facebook']['clientSecret'], 'GET');
+        if (!isset($app['access_token']) || empty($app['access_token'])) {
+            // Err: Can't obtain app access token
+            $this->flash->addFlashNext('err', $this->translation->_t('auth.msg.err-app-access-token'));
+            $this->auth->redirect($loginUrl);
+        }
+
         if (!isset($info['data']['user_id']) || empty($info['data']['user_id'])) {
             // Err: Can't obtain user id
             $this->flash->addFlashNext('err', $this->translation->_t('auth.msg.err-user-id'));
