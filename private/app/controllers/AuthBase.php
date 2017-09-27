@@ -1,4 +1,5 @@
 <?php
+
 namespace Webiik;
 
 /**
@@ -239,6 +240,7 @@ class AuthBase
 
             // User does not exist, sign up the user
             $resArr = $this->socialSignup($email, $provider);
+            $resArr['signup'] = true;
 
         }
 
@@ -443,7 +445,7 @@ class AuthBase
 
         if ($token['err']) {
             // Err: Error during generating token
-            $resArr['msg']['err'][] =  $this->translation->_t('auth.msg.key-cant-generate');
+            $resArr['msg']['err'][] = $this->translation->_t('auth.msg.key-cant-generate');
             return $resArr;
         }
 
@@ -579,7 +581,7 @@ class AuthBase
         $rToken = $this->auth->tokenValidate($key[0], $key[1], $tableName);
         if ($rToken['err']) {
             // Err:...
-            if($rToken['err'] == 2){
+            if ($rToken['err'] == 2) {
                 // ...Unsupported provider
                 $resArr['msg']['err'][] = $this->translation->_t('auth.msg.provider-unsupported');
             } else {
@@ -874,6 +876,10 @@ class AuthBase
             }
 
             $resArr['uid'] = $userSet['uid'];
+        }
+
+        if (isset($userSet['provider'])) {
+            $resArr['provider'] = $userSet['provider'];
         }
 
         $resArr['err'] = $userSet['err'];
