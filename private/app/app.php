@@ -53,7 +53,7 @@ $app->container()->addService('WTemplateEngine', function ($c) {
 
     // Return current route name
     $function = new \Twig_SimpleFunction('currentRoute', function () use ($router) {
-        return $router->routeInfo['name'];
+        return isset($router->routeInfo['name']) ? $router->routeInfo['name'] : false;
     });
     $twig->addFunction($function);
 
@@ -157,15 +157,6 @@ $app->container()->addService('Webiik\WRender', function ($c) {
 
     return $render;
 });
-
-// There are two possibilities how to display login page. First one is redirect user to login page.
-// Second one is display login page at URL of protected content. Webiik uses first way as default.
-// If you prefer second way, uncomment the following lines. If you use second way, don't forget to
-// move translations for routes that require authentication to _app... translation file.
-// Add Auth middleware
-//$app->addService('Webiik\AuthMw', function ($c) use ($app) {
-//    return new \Webiik\AuthMw(...$app::DIconstructor('Webiik\AuthMw', $c));
-//});
 
 // Add own error routes handlers
 $app->router()->map404('Webiik\Error404:run');
