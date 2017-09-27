@@ -79,13 +79,6 @@ return [
         'admin' => ['mysql', 'localhost', 'webiik', 'root', 'root'],
     ],
 
-    // AuthMwRedirect class settings
-    'AuthMwRedirect' => [
-
-        // Route where user will be redirected if he/she is not logged in
-        'loginRouteName' => 'login',
-    ],
-
     // Auth class settings
     'Auth' => [
 
@@ -191,7 +184,13 @@ return [
             'SMTPAuth' => false,
             'SMTPAuthUserName' => '',
             'SMTPAuthPswd' => '',
-            'SMTPOptions' => [],
+            'SMTPOptions' => [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ],
+            ],
         ]
     ],
 

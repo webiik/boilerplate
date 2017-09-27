@@ -97,14 +97,14 @@ return [
         'methods' => ['GET', 'POST'],
         'controller' => 'Webiik\Account:run',
         'middlewares' => [
-            'Webiik\MwAuth:can' => ['access-account'],
+            'Webiik\MwAuth:cant' => ['access-account', 'login'],
         ],
     ],
     'admin' => [
         'methods' => ['GET', 'POST'],
         'controller' => 'Webiik\Admin:run',
         'middlewares' => [
-            'Webiik\MwAuth:can' => ['access-admin'],
+            'Webiik\MwAuth:cant' => ['access-admin', 'login'],
         ],
     ],
 ];
