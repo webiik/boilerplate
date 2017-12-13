@@ -25,6 +25,10 @@ class AuthSignupApi extends AuthBase
         // Try to login the user
         $resArr = $this->signup();
 
+        // Get new csrf token
+        $resArr['csrf']['tokenName'] = $this->csrf->getTokenName();
+        $resArr['csrf']['token'] = $this->csrf->getToken();
+
         // Set JSON header
         $response = new Response();
         $response->setContentType('json');

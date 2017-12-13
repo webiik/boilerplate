@@ -28,6 +28,10 @@ class AuthActivationSendApi extends AuthBase
         // Try to log in the user
         $resArr = $this->activationStepOne();
 
+        // Get new csrf token
+        $resArr['csrf']['tokenName'] = $this->csrf->getTokenName();
+        $resArr['csrf']['token'] = $this->csrf->getToken();
+
         // If password renewal request has been successfully generated
         if (!$resArr['err']) {
 

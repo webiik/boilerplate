@@ -18,6 +18,10 @@ class AuthActivationConfirmApi extends AuthBase
         // Try to log in the user
         $resArr = $this->activationStepTwo();
 
+        // Get new csrf token
+        $resArr['csrf']['tokenName'] = $this->csrf->getTokenName();
+        $resArr['csrf']['token'] = $this->csrf->getToken();
+
         // Set JSON header
         $response = new Response();
         $response->setContentType('json');
