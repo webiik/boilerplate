@@ -158,8 +158,12 @@ return [
         // Directory where sessions will be stored. path|false = default path
         'dir' => __DIR__ . '/../tmp/sessions',
 
-        // How long sessions will be valid in seconds. int, 0 = till session is valid
-        'lifetime' => 0,
+        // How sessions cookie will be valid in seconds. 0 = till browser is closed
+        'cookieLifetime' => 0,
+
+        // How long an unused PHP session will be kept alive
+        // If Auth's autoLogoutTime is not 0, this value should be same or greater
+        'gcLifetime' => 1440,
     ],
 
     // Csrf class settings
