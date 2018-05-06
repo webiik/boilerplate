@@ -944,7 +944,7 @@ class AuthBase
         // Err: User exist with different suffix
         if ($userGet['err'] == 6) {
             $suffix = '<a href="' . $this->router->getUrlFor('login', $userGet['suffix']) . '">' . $userGet['suffix'] . '</a>';
-            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.user-already-exists-suffix-set', ['suffix' => $suffix]);
+            $resArr['msg']['err'][] = $this->translation->_p('auth.msg.user-already-exists-suffix-get', ['suffix' => $suffix]);
             $resArr['form']['msg']['err']['email'][] = '';
             $resArr['form']['msg']['err']['pswd'][] = '';
         }
